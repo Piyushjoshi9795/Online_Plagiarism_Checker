@@ -1,0 +1,19 @@
+{% extends '_base.html' %}
+
+{% block title %}Submitted Assignments{% endblock title %}
+
+{% block content %}
+    {% with total_uploaded=request.user.assignment_uploaded.count %}
+    <h1> You have submitted {{ total_uploaded }} assignment{{ total_uploaded|pluralize }}.</h1>
+  {% endwith %}
+
+    {% for assingment in submitted_list %}
+        <div class="card">
+            <div class="card-header" >
+            <span class="font-weight-bold"><a href="{{ assingment.get_absolute_url }}">{{ assingment.assignment.title }}</a></span> &middot;
+            <span class="text-muted">by {{ assingment.assignment.by_teacher }} sir | {{ assingment.student.get_full_name|default:assingment.student.username }}</span>
+            </div>
+        </div>
+        <br />
+    {% endfor %}
+{% endblock content %}

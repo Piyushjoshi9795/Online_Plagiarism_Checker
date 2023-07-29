@@ -1,0 +1,42 @@
+{% extends '_base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{{ assignment.title }}{% endblock title %}
+{% block content %}
+        <h1>{{ assignment.title }}</h1>
+        <p class="date">
+            Published {{ assignment.date }} by {{ assignment.by_teacher.get_full_name|default:assignment.by_teacher.username }}
+        </p>
+        {{ assignment.description }}
+        <p class="deadline">
+        Deadline {{ assignment.deadline }}
+        </p>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-outline-secondary">Upload Assignment</button>
+        </form>
+{% endblock content %}
+
+
+{#        <div class="row">#}
+{#            <div class="col-sm-4">#}
+{#                <button type="button" class="btn btn-outline-dark" id="submit">Submit Assignment</button>#}
+{#            </div>#}
+{##}
+{#            <div id="upload_form" class="col-sm-8" style="display: none">#}
+{#                <form method="post" enctype="multipart/form-data">#}
+{#                    {% csrf_token %}#}
+{#                    {{ form }}#}
+{#                    <button class='btn btn-success' type="submit">Upload</button>#}
+{#                </form>#}
+{#            </div>#}
+{#        </div>#}
+
+
+
+{##}
+{#{% block domready %}#}
+{#    $("#submit").click(function(){#}
+{#    $("#upload_form").fadeToggle(1000);#}
+{#    });#}
+{#{% endblock %}#}

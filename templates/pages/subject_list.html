@@ -1,0 +1,20 @@
+{% extends '_base.html' %}
+
+{% block title %}Dashboard - Plagiarism Checker{% endblock title %}
+
+{% block content %}
+    <div class="container">
+    {% if user.i_am == 'teacher' %}
+        <a href="{% url 'give-assignment' %}" class="btn btn-outline-warning pb-2 mb-4 mt-4">Give Assignment</a>
+     {% endif %}
+        <div class="list-group">
+            {% for subject in subjects %}
+                <a href="{{ subject.get_absolute_url }}"
+                   class="list-group-item list-group-item-action">{{ subject.subject }}</a>
+            {% endfor %}
+        </div>
+    </div>
+
+
+
+{% endblock content %}

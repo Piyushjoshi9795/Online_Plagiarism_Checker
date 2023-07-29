@@ -1,0 +1,163 @@
+{% extends '_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ assignment.subject.subject }} - Plagiarism Checker{% endblock title %}
+
+{% block content %}
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'success' %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>{{ message }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                        <strong>{{ message }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        <h1 class="mt-5">{{ assignment.title }}</h1>
+        <p><span
+                class="badge badge-info"> Created: {{ assignment.date }}</span></p>
+        <p class="lead">
+            Due:<code> {{ assignment.deadline }}</code> [{{ assignment.subject.teacher }} sir]
+        </p>
+
+        <p class="lead">
+            {{ assignment.description }}
+        </p>
+
+    {% if user.i_am == 'teacher' %}
+        <hr>
+        <h1 class="mt-5">Student Assignments</h1>
+        {% for work in assignment.upload_assignment.all %}
+            <div class="alert alert-info" role="alert">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <a href="{{ work.upload_file.url }}" target="_blank" class="btn btn-outline-primary">Work</a>
+                        <p class="badge badge-info">Uploaded: {{ work.uploaded_date }}</p>
+
+                    </div>
+                    <div>
+                        <h4><span class="badge badge-warning">{{ work.student.get_full_name }}</span></h4>
+                    </div>
+                    <div>
+                        <div class="d-flex justify-content-end">
+                            <div class="mx-2">
+                                <button type="button" class="btn btn-primary" disabled>
+                                    Status: {{ work.status|capfirst }}</button>
+                            </div>
+                            <div class="mx-2" id="check">
+                                <a href="{% url 'check_plag' work.pk %}" class="btn btn-success">Check
+                                    Plagiarism</a>
+                            </div>
+{#                            <div class="spinner-border text-warning mx-2" id="spinner">#}
+{#                                <span class="sr-only">Loading...</span>#}
+{#                            </div>#}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+
+        {% if user.i_am == 'student' %}
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button type="submit" class="btn btn-outline-secondary">Submit</button>
+            </form>
+        {% endif %}
+
+
+
+        {% if assignment_uploaded %}
+
+            <div class="mt-5">
+                <h4 class="badge badge-primary"> Uploaded Work</h4>
+                <div class="alert alert-secondary" role="alert">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="mt-2">{{ filename }} <span
+                                    class="badge badge-info">Uploaded: {{ assignment_uploaded.uploaded_date }}</span>
+                            </h6>
+                        </div>
+                        <div>
+                            <div class="d-flex justify-content-end">
+                                <div class="mx-2">
+                                    <button type="button" class="btn btn-primary" disabled>
+                                        Status: {{ assignment_uploaded.status|capfirst }}</button>
+                                </div>
+                                <div class="mx-2" id="check2">
+                                    <a href="{% url 'check_plag' assignment_uploaded.pk %}" class="btn btn-success">Check
+                                        Plagiarism</a>
+                                </div>
+{#                                <div class="spinner-border text-warning mx-2" id="spinner2">#}
+{#                                    <span class="sr-only">Loading...</span>#}
+{#                                </div>#}
+                                <div class="mx-2">
+                                    <button type="button" class="btn btn-danger" data-toggle="modal"
+                                            data-target="#staticBackdrop">Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
+                 aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">{{ filename }}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <code>Are you sure you want to delete this work?</code>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <a class="btn btn-danger"
+                               href="{% url 'delete_ass' assignment_uploaded.pk %}">Delete it
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+
+    </div>
+
+
+{% endblock content %}
+
+{% block domready %}
+{#    $("#spinner").hide();#}
+{#    $("#spinner2").hide();#}
+{##}
+{##}
+{#    $("#check").click(function(){#}
+{#    $("#check").hide();#}
+{#    $("#spinner").show();#}
+{#    });#}
+{##}
+{#    $("#check2").click(function(){#}
+{#    $("#check2").hide();#}
+{#    $("#spinner2").show();#}
+{#    });#}
+{% endblock %}

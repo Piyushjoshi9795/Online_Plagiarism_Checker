@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}Log In - Plagiarism Checker{% endblock title %}
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login-signup.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="was">
+        <img class="wave" src="{% static 'images/wave.png' %}">
+    </div>
+    <div class="container">
+        <div class="img">
+            <img src="{% static 'images/search.svg' %}">
+        </div>
+        <div class="login-content">
+
+            <form method="post">
+                <img src="{% static 'images/profile.svg' %}">
+                <h3 class="title">Assignment Plagiarism Checker</h3>
+                {% csrf_token %}
+                {{ form|crispy }}
+
+                <input type="submit" class="btn" value="Login"/>
+                <a href="{% url 'account_reset_password' %}">Forgot Password?</a>
+                <a href="{% url 'account_signup' %}">Don't have account? Sign Up</a>
+            </form>
+
+        </div>
+        <div>
+
+        </div>
+
+    </div>
+{% endblock content %}
+
+{% block js %}
+    <script src="{% static 'js/main.js' %}"></script>
+{% endblock %}

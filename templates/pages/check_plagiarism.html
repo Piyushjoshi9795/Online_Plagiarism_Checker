@@ -1,0 +1,36 @@
+{% extends '_base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Check Plagiarism - Plagiarism Checker{% endblock title %}
+
+{% block content %}
+    <div class="container">
+        {% if user.i_am == 'teacher' %}
+            <h3>{{ assignment.student.get_full_name }} work <span class="text-danger">{{ filename }}</span></h3>
+
+        {% else %} <h3>{{ assignment.student.get_short_name }} work <span class="text-danger">{{ filename }}</span></h3>
+        {% endif %}
+
+        <hr>
+        {% for pdf_path, percent in score %}
+            <div class="alert alert-danger" role="alert">
+                {{ percent }}% same as of file <a
+                    href="{% static 'datasets/'|add:pdf_path %}" target="_blank" class="alert-link">{{ pdf_path }}</a>
+            </div>
+        {% endfor %}
+
+        {% if user.i_am == 'teacher' %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form | crispy }}
+                <button type="submit" class="btn btn-outline-secondary">Save</button>
+            </form>
+        {% endif %}
+
+
+    </div>
+
+
+
+{% endblock content %}

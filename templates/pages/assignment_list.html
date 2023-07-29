@@ -1,0 +1,55 @@
+{% extends '_base.html' %}
+
+{% block title %}{{ assignments.subject }} - Plagiarism Checker{% endblock title %}
+
+{% block content %}
+    <div class="container">
+        {#        <div class="row">#}
+        {#            <div id="subjectMenu" class="col-md-3 mt-5">#}
+        {#                <h3>{{ subject.subject }}</h3>#}
+        {#                <h5>Teacher -> {{ subject.teacher.get_full_name }}</h5>#}
+        {#                <button type="button" class="btn btn-outline-primary">Assignment</button>#}
+        {##}
+        {##}
+        {#            </div>#}
+        {##}
+        {#            <div id="general" class="col-md-9 mt-3">#}
+        {##}
+        {#                <h3>Students</h3>#}
+        {#                {% for subjectname in subject.subject_student.all %}#}
+        {#                    <div>#}
+        {#                        <h4>{{ subjectname.student.get_full_name }}</h4>#}
+        {#                    </div>#}
+        {#                {% endfor %}#}
+        {##}
+        {##}
+        {#            </div>#}
+        {#        </div>#}
+        <div class="my-3 p-3 bg-white rounded shadow-sm">
+            <div class="d-flex justify-content-between border-bottom border-gray">
+                <div>
+                    <h2 class=" pb-2 mb-0">{{ assignments.subject }} Assignments</h2>
+                </div>
+                <div>
+{#                    <button type="button" class="btn btn-outline-warning pb-2 mb-0 mt-4">Give Assignment</button>#}
+                </div>
+            </div>
+
+
+            {% for assignment in assignments.subject_assignment.all %}
+                <div class="media pt-3">
+                    <a href="{{ assignment.get_absolute_url }}"><p
+                            class="media-body pb-3 mb-0 large lh-125 border-bottom border-gray">
+                        <strong class="d-block text-gray-dark">{{ assignment.title }} <span
+                                class="badge badge-secondary">Due: {{ assignment.deadline }}</span></strong>
+                        {{ assignment.description | truncatechars:100 }}
+                    </p></a>
+
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
+
+{% endblock content %}
